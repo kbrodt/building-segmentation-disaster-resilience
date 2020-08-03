@@ -68,7 +68,7 @@ On 6 GPUs Tesla V100 it takes around 1h.
 
 ### Approach
 
-Final solution turned out to be quite straightforward.
+It turned out the approach is quite straightforward. You can get good results by training Unet-like models with heavy encoders using only tier 1 data and some tricks. The main idea is to take into account the rare tiles. One way is to assign some class to the tile and use the inverse probability of that class in the dataset to oversample them. It significantly speeds up the learning process. The other trick is to change binary cross-entropy loss to multiclass cross-entropy (in our case 2 output channels) and take argmax instead of searching an optimal threshold. It is also preferred to train the model in the same conditions as at inference, i. e. at inference we have 1024x1024 tiles, so we need maximally to preserve this resolution during training. To overfit on testset one you can do pseudo-labelling. After obtaining a strong single model do train 5 more models and do ensemble them by simple averaging.
 
 #### Summary
  
